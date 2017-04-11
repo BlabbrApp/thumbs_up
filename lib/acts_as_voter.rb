@@ -100,7 +100,9 @@ module ThumbsUp #:nodoc:
           :voter_type => self.class.base_class.name,
           :voteable_id => voteable.id,
           :voteable_type => voteable.class.base_class.name
-        ).map(&:destroy)
+        ).map{|voteable|
+          voteable.update(is_current: false, removed_on: Time.now)
+        }
       end
 
       alias_method :clear_votes, :unvote_for
