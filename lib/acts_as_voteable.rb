@@ -126,7 +126,7 @@ module ThumbsUp
         0 < Vote.where(
               :voteable_id => self.id,
               :voteable_type => self.class.base_class.name,
-              :voter_id => voter.id
+              :voter_id => voter.id,
               :is_current => true
             ).count
       end
