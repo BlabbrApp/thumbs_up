@@ -70,11 +70,11 @@ module ThumbsUp
       end
 
       def votes_for
-        self._votes_on.where(:vote => true).count
+        self._votes_on.where(:vote => true).where(:is_current => true).count
       end
 
       def votes_against
-        self._votes_on.where(:vote => false).count
+        self._votes_on.where(:vote => false).where(:is_current => true).count
       end
 
       def percent_for
@@ -97,7 +97,7 @@ module ThumbsUp
       # http://evanmiller.org/how-not-to-sort-by-average-rating.html
       def ci_plusminus(confidence = 0.95)
         require 'statistics2'
-        n = self._votes_on.size
+        n = self._votes_on.where(:is_current => true).size
         if n == 0
           return 0
         end
@@ -107,19 +107,19 @@ module ThumbsUp
       end
 
       def votes_count
-        _votes_on.size
+        _votes_on.where(:is_current => true).size
       end
 
       def voters_who_voted
-        _votes_on.map(&:voter).uniq
+        _votes_on.where(:is_current => true).map(&:voter).uniq
       end
 
       def voters_who_voted_for
-          _votes_on.where(:vote => true).map(&:voter).uniq
+          _votes_on.where(:vote => true).where(:is_current => true).map(&:voter).uniq
       end
 
       def voters_who_voted_against
-          _votes_on.where(:vote => false).map(&:voter).uniq
+          _votes_on.where(:vote => false).where(:is_current => true).map(&:voter).uniq
       end
 
       def voted_by?(voter)
@@ -127,6 +127,7 @@ module ThumbsUp
               :voteable_id => self.id,
               :voteable_type => self.class.base_class.name,
               :voter_id => voter.id
+              :is_current => true
             ).count
       end
 
