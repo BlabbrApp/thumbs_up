@@ -99,7 +99,8 @@ module ThumbsUp #:nodoc:
           :voter_id => self.id,
           :voter_type => self.class.base_class.name,
           :voteable_id => voteable.id,
-          :voteable_type => voteable.class.base_class.name
+          :voteable_type => voteable.class.base_class.name,
+          :is_current => true
         ).map{|voteable|
           voteable.update(is_current: false, removed_on: Time.now)
         }
@@ -114,7 +115,8 @@ module ThumbsUp #:nodoc:
               :voter_type => self.class.base_class.name,
               :vote => direction == :up ? true : false,
               :voteable_id => voteable.id,
-              :voteable_type => voteable.class.base_class.name
+              :voteable_type => voteable.class.base_class.name,
+              :is_current => true
             ).count
       end
 
@@ -123,7 +125,8 @@ module ThumbsUp #:nodoc:
               :voter_id => self.id,
               :voter_type => self.class.base_class.name,
               :voteable_id => voteable.id,
-              :voteable_type => voteable.class.base_class.name
+              :voteable_type => voteable.class.base_class.name,
+              :is_current => true
             ).map(&:vote) #in case votes is premitted to be duplicated
         if votes.count == 1
           votes.first
